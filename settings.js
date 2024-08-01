@@ -1,6 +1,6 @@
-const fs = require('fs');
+import fs from 'fs';
 
-settingsPath = './settings.json';
+var settingsPath = './settings.json';
 var parsed = JSON.parse(fs.readFileSync(settingsPath, 'UTF-8'));
 
-exports.value = parsed;
+export const value = parsed;

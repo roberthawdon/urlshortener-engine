@@ -1,6 +1,6 @@
-const express = require('express');
-const got = require('got');
-const setting = require('./settings');
+import express from 'express';
+import got from 'got';
+const setting = await import('./settings.js');
 
 const port = process.env.PORT || setting.value.engine.port;
 const apiUrl = process.env.APP_APIURL || setting.value.appSettings.apiUrl;
@@ -9,7 +9,7 @@ const defaultRedirect = process.env.APP_DEFAULT_REDIRECT || setting.value.appSet
 const app = express();
 
 var appName = "URL Shortener Engine"
-var version = "0.0.6"
+var version = "0.0.7"
 
 app.get('/', (req, res) => {
   res.redirect(301, defaultRedirect);
