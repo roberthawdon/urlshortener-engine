@@ -1,0 +1,13 @@
+{
+  "name": "UrlShortenerEngine",
+  "version": "0.0.3",
+  "description": "Hawdon URL Shortener Engine",
+  "main": "engine.js",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
