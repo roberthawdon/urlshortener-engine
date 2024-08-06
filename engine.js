@@ -9,7 +9,7 @@ const defaultRedirect = process.env.APP_DEFAULT_REDIRECT || setting.value.appSet
 const app = express();
 
 var appName = "URL Shortener Engine"
-var version = "0.0.7"
+var version = "0.0.8"
 
 app.get('/', (req, res) => {
   res.redirect(301, defaultRedirect);
@@ -29,7 +29,7 @@ app.get('/:urlCode', (req, res) => {
     } catch (error) {
       console.log(error.response.body);
       var parse = JSON.parse(error.response.body);
-      res.status(error.response.statusCode).send("<h1>" + error.response.statusCode + " Error</h1><p>" + parse.error + "</p>");
+      res.status(error.response.statusCode).send("<h1>" + error.response.statusCode + " Error</h1><p>" + parse.detail + "</p>");
     }
   })();
 });
