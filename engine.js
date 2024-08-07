@@ -1,5 +1,13 @@
 import express from 'express';
 import got from 'got';
+import { promises as fs } from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Utility to get __dirname in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const setting = await import('./settings.js');
 
 const port = process.env.PORT || setting.value.engine.port;
@@ -9,7 +17,7 @@ const defaultRedirect = process.env.APP_DEFAULT_REDIRECT || setting.value.appSet
 const app = express();
 
 var appName = "URL Shortener Engine"
-var version = "0.0.8"
+var version = "0.0.10"
 
 app.get('/', (req, res) => {
   res.redirect(301, defaultRedirect);
@@ -29,7 +37,19 @@ app.get('/:urlCode', (req, res) => {
     } catch (error) {
       console.log(error.response.body);
       var parse = JSON.parse(error.response.body);
-      res.status(error.response.statusCode).send("<h1>" + error.response.statusCode + " Error</h1><p>" + parse.detail + "</p>");
+      try {
+        const errorPagePath = path.join(__dirname, 'errorPage.html');
+        let errorPage = await fs.readFile(errorPagePath, 'utf8');
+        errorPage = errorPage.replace(/{statusCode}/g, error.response.statusCode);
+        errorPage = errorPage.replace(/{status}/g, parse.status);
+        errorPage = errorPage.replace(/{detail}/g, parse.detail);
+        res.status(error.response.statusCode).send(errorPage);
+      } catch (fileError) {
+        // Fallback to basic error page if the complex one doesn't exist
+        res.status(error.response.statusCode).send(
+          `<h1>${error.response.statusCode} Error</h1><p>${parse.detail}</p>`
+        );
+      }
     }
   })();
 });
